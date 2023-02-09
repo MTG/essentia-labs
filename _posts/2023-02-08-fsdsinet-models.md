@@ -8,13 +8,13 @@ category:
 ---
 
 We are delighted to introduce the FSD-SINet models for sound event classification in Essentia.
-FSD-SINet is a family of CNN architectures trained in the [FSD50K](https://zenodo.org/record/4060432) dataset with techniques to enhance the shift-invariance properties.
+FSD-SINet is a family of CNN architectures trained in the [FSD50K](https://zenodo.org/record/4060432) dataset with techniques to enhance shift invariance.
 These techniques are:
  - Trainable Low-Pass Filters (TLPF) [1]
  - Adaptive Polyphase Sampling (APS) [2]
  - Intra-Block Pooling (IBP)
 
-The complete list of models supported in Essentia is available on [Essentia's site](https://essentia.upf.edu/models.html#audio-event-recognition) and the experimental results and the implementation details are available in the paper [3] and the official [repository](https://github.com/edufonseca/shift_sec).
+The complete list of models supported in Essentia is available on [Essentia's site](https://essentia.upf.edu/models.html#audio-event-recognition) and the experimental results and implementation details are available in the paper [3] and the official [repository](https://github.com/edufonseca/shift_sec).
 According to the authors, the [fsd-sinet-vgg42-tlpf-aps-1](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg42-tlpf-ibp-1.pb) model featuring TLPF and APS obtained the best evaluation metrics.
 Additionally, [fsd-sinet-vgg41-tlpf-ibp-1](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg41-tlpf-ibp-1.pb) is a lighter architecture using TLPF and IBP intended for reduced computational cost.
 
@@ -22,20 +22,26 @@ As an example, let's analyze a field recording and observe the model's predictio
 
 <iframe frameborder="0" scrolling="no" src="https://freesound.org/embed/sound/iframe/636921/simple/large/" width="760" height="245"></iframe>
 
-The following code performs inference with the `fsd-sinet-vgg42-tlpf-aps-1` model:
+The following code performs inference with the [fsd-sinet-vgg42-tlpf-aps-1](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg42-tlpf-ibp-1.pb) model:
 
 ```python
 from essentia.standard import MonoLoader, TensorflowPredictFSDSINet
 
-audio_file = "636921__girlwithsoundrecorder__sounds-from-the-forest.wav"
-audio = MonoLoader(filename=audio_file, sampleRate=22050)()
-model = TensorflowPredictFSDSINet(graphFilename="fsd-sinet-vgg42-tlpf-aps-1.pb")
+filename = "636921__girlwithsoundrecorder__sounds-from-the-forest.wav"
+graph_filename = "fsd-sinet-vgg42-tlpf-aps-1.pb"
+
+audio = MonoLoader(filename=filename, sampleRate=22050)()
+model = TensorflowPredictFSDSINet(graphFilename=graph_filename)
+
 activations = model(audio)
 ```
 > *Note*: Remember to update Essentia before running the code.
 
-By default, these model predict sound event activations with a rate of 2 Hz.
-We can visualize the top activations using `matplotlib`:
+These models make predictions with a rate of approximately 2 Hz by default.
+Internally, they operate on 10 ms frames, and the number of frames to jump (50 by default) can be controlled with the `patchHopSize` parameter.
+Additionally, the models can be configured to return embeddings instead of activations by setting the parameter `output="model/global_max_pooling1d/Max"`.
+
+Finally, we can visualize the top activations using `matplotlib`:
 
 ```python
 import json
@@ -43,7 +49,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def get_top_indices(data, top_n=10):
+def top_from_average(data, top_n=10):
     av = np.mean(data, axis=1)
     sorting = np.argsort(av)[::-1]
     return sorting[:top_n], [av[i] for i in sorting]
@@ -54,9 +60,11 @@ metadata = json.load(open(metadata_file, "r"))
 labels = metadata["classes"]
 
 # Compute the top-n labels and predictions
-top_n, averages = get_top_indices(predictions, top_n=15)
+top_n, averages = top_from_average(predictions, top_n=15)
 top_labels = [labels[i] for i in top_n]
-top_labels_with_av = [f"{label} ({av:.3f})" for label, av in zip(top_labels, averages)]
+top_labels_with_av = [
+    f"{label} ({av:.3f})" for label, av in zip(top_labels, averages)
+]
 
 top_predictions = np.array([predictions[i, :] for i in top_n])
 
@@ -69,10 +77,7 @@ locs, _ = plt.xticks()
 ticks = np.array(locs // 2).astype("int")
 plt.xticks(locs[1: -1], ticks[1: -1])
 plt.tick_params(
-    bottom=True,
-    top=False,
-    labelbottom=True,
-    labeltop=False,
+    bottom=True, top=False, labelbottom=True, labeltop=False
 )
 plt.xlabel("(s)")
 
@@ -81,7 +86,7 @@ plt.savefig("activations.png", bbox_inches='tight')
 
 ![png]({{ site.baseurl }}/assets/fsdsinet-models/activations.png)
 
-As it can be seen, the model detects the intermittent bird sounds and some of the breathing and step sounds of the person recording.
+As can be seen, the model detects the intermittent bird sounds and some of the breathing and step sounds of the person recording.
 
 ## References
 
