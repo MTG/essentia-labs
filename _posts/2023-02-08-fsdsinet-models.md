@@ -14,7 +14,7 @@ These techniques are:
  - Adaptive Polyphase Sampling (APS) [2]
  - Intra-Block Pooling (IBP)
 
-The complete list of models supported in Essentia is available on [Essentia's site](https://essentia.upf.edu/models.html#audio-event-recognition) and the experimental results and implementation details are available in the paper [3] and the official [repository](https://github.com/edufonseca/shift_sec).
+The complete list of models supported in Essentia along with their vocabulary is available on [Essentia's site](https://essentia.upf.edu/models.html#audio-event-recognition), and the experimental results and implementation details are available in the paper [3] and the official [repository](https://github.com/edufonseca/shift_sec).
 According to the authors, the [fsd-sinet-vgg42-tlpf-aps-1](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg42-tlpf-ibp-1.pb) model featuring TLPF and APS obtained the best evaluation metrics.
 Additionally, [fsd-sinet-vgg41-tlpf-ibp-1](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg41-tlpf-ibp-1.pb) is a lighter architecture using TLPF and IBP intended for reduced computational cost.
 
@@ -37,7 +37,7 @@ activations = model(audio)
 ```
 > *Note*: Remember to update Essentia before running the code.
 
-These models make predictions with a rate of approximately 2 Hz by default.
+These models make predictions each 0.5 seconds by default.
 Internally, they operate on 10 ms frames, and the number of frames to jump (50 by default) can be controlled with the `patchHopSize` parameter.
 Additionally, the models can be configured to return embeddings instead of activations by setting the parameter `output="model/global_max_pooling1d/Max"`.
 
