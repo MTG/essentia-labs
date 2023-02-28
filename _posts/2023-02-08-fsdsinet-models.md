@@ -40,7 +40,7 @@ These models make predictions each 0.5 seconds by default.
 Internally, they operate on 10 ms frames, and the number of frames to jump (50 by default) can be controlled with the `patchHopSize` parameter.
 Additionally, the models can be configured to return embeddings instead of activations by setting the parameter `output="model/global_max_pooling1d/Max"`.
 
-Finally, we can visualize the top activations using `matplotlib` and the model's [metadata](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg42-tlpf_aps-1.json):
+The following code visualizes the top activations using `matplotlib` and the model's [metadata](https://essentia.upf.edu/models/audio-event-recognition/fsd-sinet/fsd-sinet-vgg42-tlpf_aps-1.json):
 
 ```python
 import json
@@ -89,7 +89,7 @@ As can be seen, the model detects the intermittent bird sounds and some of the b
 
 ## References
 
-[1] Eduardo Fonseca, Andres Ferraro, Xavier Serra, “[Improving Sound Event Classification by Increasing Shift Invariance in Convolutional Neural Networks](https://arxiv.org/abs/2107.00623),” arXiv:2107.00623, 2021.
+[1] E. Fonseca, A. Ferraro, X. Serra, “[Improving Sound Event Classification by Increasing Shift Invariance in Convolutional Neural Networks](https://arxiv.org/abs/2107.00623),” arXiv:2107.00623, 2021.
 
 [2] R. Zhang, “[Making convolutional networks shift-invariant again](https://arxiv.org/abs/1904.11486),” in International Conference on Machine Learning. PMLR, 2019, pp. 7324–7334.
 
