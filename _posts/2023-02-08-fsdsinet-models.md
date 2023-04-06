@@ -49,7 +49,7 @@ import numpy as np
 
 
 def top_from_average(data, top_n=10):
-    av = np.mean(data, axis=1)
+    av = np.mean(data, axis=0)
     sorting = np.argsort(av)[::-1]
     return sorting[:top_n], [av[i] for i in sorting]
 
