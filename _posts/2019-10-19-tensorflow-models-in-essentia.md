@@ -58,7 +58,7 @@ python3 waf install
 As an example, let's try to use [MusiCNN](https://github.com/jordipons/musicnn), a pre-trained auto-tagging model based on Convolutional Neural Networks (CNNs). There are versions trained on different datasets. In this case, we will consider the model relying on [the subset of Million Song Dataset annotated by last.fm tags](http://millionsongdataset.com/lastfm/) that was trained on the top 50 tags.
 
 Here we are reproducing this [blogpost](https://towardsdatascience.com/musicnn-5d1a5883989b) as a demonstration of how simple it is to incorporate a model into our framework.
-All we need is to get the [model in Protobuf format](https://essentia.upf.edu/models/autotagging/msd/msd-musicnn-1.pb) (we provide more pre-made models on [our webpage](https://essentia.upf.edu/documentation/models/)) and obtain its labels and the names of the input and output layers. If the names of the layers are not supplied there are plenty of online resources explaining how to [inspect the model](https://medium.com/@daj/how-to-inspect-a-pre-trained-tensorflow-model-5fd2ee79ced0) to get those.
+All we need is to get the [model in Protobuf format](https://essentia.upf.edu/models/legacy/autotagging/msd/msd-musicnn-1.pb) (we provide more pre-made models on [our webpage](https://essentia.upf.edu/documentation/models/)) and obtain its labels and the names of the input and output layers. If the names of the layers are not supplied there are plenty of online resources explaining how to [inspect the model](https://medium.com/@daj/how-to-inspect-a-pre-trained-tensorflow-model-5fd2ee79ced0) to get those.
 
 
 ```python
